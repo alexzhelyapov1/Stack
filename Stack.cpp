@@ -102,3 +102,17 @@ int RecopyData (char *oldData, struct Stack *stack) {
 
 	return OK;
 }
+
+
+int TestStack1 (struct Stack *stack) {
+	assert (stack);
+
+	int ERR = OK;
+	for (int i = 1; i < 9; i++) {
+		StackPush (stack, '0' + i);
+	}
+	for (int i = 1; i < 11; i++) {
+		printf ("Popping = %c\n", StackPop (stack, &ERR));
+	}
+	return 0;
+}
