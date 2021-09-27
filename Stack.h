@@ -26,6 +26,8 @@ int StackPush (struct Stack *stack, char element);
 int StackResizeUp (struct Stack *stack);
 char StackPop (struct Stack *stack, int *ERR);
 int StackResizeDown (struct Stack *stack);
+int RecopyData (char *oldData, struct Stack *stack);
+//void dump
 
 
 #endif
