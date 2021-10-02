@@ -1,3 +1,7 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
+
 #include "Stack.h"
 
 int main () {

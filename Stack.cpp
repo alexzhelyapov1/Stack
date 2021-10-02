@@ -1,48 +1,64 @@
-	// записать структуру
-	// сайз умножить на размер элемента и получить количчество байт
-	// тип копируем по байтно
-	// где указывается параметр по умолчанию
-	// сделать enum
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
 #include "Stack.h"
+
+int StackResize (struct Stack *stack, int mlt);
+int RecopyData (void *oldData, struct Stack *stack);
+
+enum STACK_PARAMS {
+
+};
+
 
 int StackCtor (struct Stack *stack) {
 	assert (stack);
 
+	VALIDATE
+
 	stack->capacity = 0;
 	stack->size = 0;
-	if ((stack->data = (char *) calloc (stack->capacity, sizeof (char))) != NULL)
+	stack->size_element = sizeof (char);
 		return OK;
-	else
-		return ERR_STACKCTOR;
 }
 
 
-int StackPush (struct Stack *stack, char element) {
+int StackPush (struct Stack *stack, void *element) {
 	assert (stack);
+
+	VALIDATE
 
 	if (stack->size == stack->capacity) {
 		int errX = 0;
-		if ((errX = StackResizeUp (stack)) == NULL) {
-		}
-		else {
+		if ((errX = StackResize (stack, 2)) != NULL) { // аргумент нового размера и в одну функйию
 			return ERR_STACKPUSH;
+
 		}
 	}
-	stack->data[stack->size] = element;
+	// memcpy
+	for (int i = 0; i < stack->size_element; i++) {
+		*((char *) (stack->data[stack->size * stack->size_element] + i)) = *((char *) element);
+	}
 	stack->size++;
 	return OK;
 }
 
 
-int StackResizeUp (struct Stack *stack) {
+int StackResize (struct Stack *stack, int mlt) {
 	assert (stack);
+
+	VALIDATE
 
 	if (stack->capacity == 0)
 		stack->capacity = 4;
-	else 
-		stack->capacity *= 2;
-	char *oldData = stack->data;
-	if ((stack->data = (char *) realloc (stack->data, stack->capacity * stack->capacity)) == NULL) {
+	else {
+		if (mlt == 2)
+			stack->capacity *= mlt;
+		else
+			stack->capacity /= (-mlt);
+	}
+	void *oldData = stack->data;
+	if ((stack->data = (void *) realloc (stack->data, stack->capacity * stack->size_element)) == NULL) {
 		return ERR_STACKRESIZEUP;
 	}
 	else {
@@ -52,16 +68,20 @@ int StackResizeUp (struct Stack *stack) {
 }
 
 
-char StackPop (struct Stack *stack, int *ERR) {
+void *StackPop (struct Stack *stack, int *ERR) {
 	assert (stack);
+
+	VALIDATE
+
 
 	if (stack->size < 1) {
 		*ERR =  ERR_STACKPOP;
-		return 'x';
+		char posion[10] = "xxxxxxxxx";
+		return (void *) posion;
 	}
 	else {
 		if (stack->size <= stack->capacity / 4) {
-			if (StackResizeDown (stack)) {
+			if (StackResize (stack, -2)) {
 				*ERR = ERR_STACKPOP;
 			}
 			else {
@@ -69,50 +89,32 @@ char StackPop (struct Stack *stack, int *ERR) {
 			}
 		}
 		stack->size--;
-
-		return stack->data[stack->size];
+		return stack->data[stack->size * stack->size_element];
 	}
 }
 
 
-int StackResizeDown (struct Stack *stack) {
-	assert (stack);
-
-	stack->capacity /= 2;
-	char *oldData = stack->data;
-	if ((stack->data = (char *) realloc (stack->data, stack->capacity * stack->capacity)) == NULL) {
-		return ERR_STACKRESIZEDOWN;
-	}
-	else {
-		RecopyData (oldData, stack);
-		return OK;
-	}
-}
-
-
-int RecopyData (char *oldData, struct Stack *stack) {
+int RecopyData (void *oldData, struct Stack *stack) {//strncpy memcpy
 	assert (oldData);
 	assert (stack);
 	assert (stack->data);
 
+	VALIDATE
 
-	for (int i = 0; i < stack->size; i++) {
-			stack->data[i] = oldData[i];
-		}
-
+	for (int i = 0; i < stack->size * stack->size_element; i++) {
+		char *newData = (char *) stack->data;
+		char *oldData1 = (char *) oldData;
+		newData[i] = oldData[i];
+	}
 	return OK;
 }
 
-
-int TestStack1 (struct Stack *stack) {
-	assert (stack);
-
-	int ERR = OK;
-	for (int i = 1; i < 9; i++) {
-		StackPush (stack, '0' + i);
-	}
-	for (int i = 1; i < 11; i++) {
-		printf ("Popping = %c\n", StackPop (stack, &ERR));
-	}
-	return 0;
+void StackDump (const struct Stack *stack) {
+	printf ("Data (pointer) = %d\n", stack->data);
+	printf ("Size = %d\n", stack->size);
+	printf ("Capacity = %d\n", stack->capacity);
 }
+// //влидация
+// VALIDATE()
+
+// validate -> dump -> file

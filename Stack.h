@@ -1,18 +1,27 @@
 #ifndef STACK_H_INCLUDED
 #define STACK_H_INCLUDED
 #define DEBUG
+#define USE_VALIDATION
+#define TESTING_MODE
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <assert.h>
+
+#ifdef USE_VALIDATION
+#define VALIDATE ;
+#else
+#define VALIDATE ;
+#endif
+
+
+
 
 struct Stack {
-	char *data;
+	void *data;
 	int size;
 	int capacity;
-};
+	int size_element;
+};//error
 
-enum Errors {
+enum Errors { // подписать каждый
 	OK = 0,
 	ERR_STACKCTOR,
 	ERR_STACKRESIZEUP,
@@ -21,14 +30,21 @@ enum Errors {
 	ERR_STACKPOP
 };
 
+
+enum ErrorsTest {
+	ERR_TESTSTACK1 = 100
+};
+
+
 int StackCtor (struct Stack *stack);
 int StackPush (struct Stack *stack, char element);
-int StackResizeUp (struct Stack *stack);
-char StackPop (struct Stack *stack, int *ERR);
-int StackResizeDown (struct Stack *stack);
-int RecopyData (char *oldData, struct Stack *stack);
+void *StackPop (struct Stack *stack, int *ERR);
+int StackDistruct (struct Stack *stack);
 void StackDump (const struct Stack *stack);
+
+#ifdef DEBUG
 int TestStack1 (struct Stack *stack);
+#endif
 
 
 #endif
