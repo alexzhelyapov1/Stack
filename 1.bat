@@ -1,4 +1,4 @@
 cd C:\C++\Podles\Stack\
-g++ .\main.cpp .\Stack.cpp -Wall -o run.exe
+g++ .\main.cpp .\Stack.cpp .\Tests.cpp -Wall -o run.exe
 run.exe
 pause

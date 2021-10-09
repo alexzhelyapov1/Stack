@@ -3,14 +3,13 @@
 #include <assert.h>
 
 #include "Stack.h"
+#include "Tests.h"
 
 int main () {
-	#ifdef DEBUG
-	printf ("DEBUG!!!\n");
-	#endif
 	struct Stack stack[1];
-	StackCtor (stack);
-	TestStack1 (stack);
+	StackCtor (stack, sizeof (char));
+	IF_TESTING_MODE_ON(printf ("DEBUG!!!\n"); 
+						TestStack1 (stack);)
 	return 0;
 }
 
