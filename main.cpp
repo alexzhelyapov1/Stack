@@ -1,16 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <assert.h>
 
-#include "Stack.h"
-#include "Tests.h"
+#include "stack.h"
+#include "tests.h"
+ 
 
 int main () {
-	struct Stack stack[1];
-	StackCtor (stack, sizeof (char));
-	IF_TESTING_MODE_ON(printf ("DEBUG!!!\n"); 
-						TestStack1 (stack);)
+	DP(printf ("URAAAAAA\n");)
+	struct Stack *stack = (struct Stack *) calloc (1, sizeof (struct Stack));
+	StackCtor (stack, sizeof (int), LOG_ERRORS);
+	DP(printf ("We created stack structure!\n");)
+	Fill_Ordered_Numbers (stack);
 	return 0;
 }
-
-// огромные массивы пустых стеков не занимают информацию

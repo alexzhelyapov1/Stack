@@ -1,4 +1,4 @@
-cd C:\C++\Podles\Stack\
-g++ .\main.cpp .\Stack.cpp .\Tests.cpp -Wall -o run.exe
-run.exe
+cd C:\C++\NewStack
+mingw32-make -f makeFile.make
+.\develop_run.exe
 pause
