@@ -12,4 +12,4 @@ int main () {
 	DP(printf ("We created stack structure!\n");)
 	Fill_Ordered_Numbers (stack);
 	return 0;
-}
+} 

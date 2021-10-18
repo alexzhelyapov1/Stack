@@ -84,8 +84,10 @@ int StackResize (struct Stack *stack, int mode) {
 
 
 int StackPush (struct Stack *stack, void *element) {
-	int size = stack->size;
-	int capacity = stack->capacity;
+	size_t size = stack->size;
+	size_t capacity = stack->capacity;
+	void *data = stack->data;
+	size_t size_element = stack->size_element;
 
 	DP(printf ("It's StackPush\n");)
 	if (size == capacity) {
@@ -96,7 +98,9 @@ int StackPush (struct Stack *stack, void *element) {
 			return result_of_resize;
 		}
 	}
-	memcpy (stack->data + size, element, stack->size_element);
+	memcpy (data + size * size_element, element, stack->size_element);
+	DP(printf ("------------After push elenemt = %d\n", * ((int *) data + size * size_element));)
+	DP(printf ("------------EEEEE push elenemt = %d\n", * ((int *) element));)
 	stack->size++;
 	return OK;
 }
@@ -111,7 +115,7 @@ int StackTop (struct Stack *stack, void *element) {
 	size_t size = stack->size; \
 	size_t size_element = stack->size_element; \
 
-	DP(printf ("-It's In stack top\n");)
+	DP(printf ("\n+++Test element out - %d\n", * ((int *) data + (size - 1) * size_element));)
 	memcpy (element, data + (size - 1) * size_element, size_element);
 	DP(printf ("It's After memcpy\n");)
 	int result_stack_pop = StackPop (stack);
@@ -119,7 +123,6 @@ int StackTop (struct Stack *stack, void *element) {
 		DP(printf ("---It's error in result_stack_pop\n");)
 		return result_stack_pop;
 	}
-	DP(printf ("-It's OK StackTop\n");)
 	return OK;
 }
 
@@ -150,4 +153,4 @@ void StackFree (struct Stack *stack) {
 	free (stack->data_with_canary);
 	free (stack->data);
 	free (stack);
-}
+} 

@@ -3,7 +3,7 @@
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include <stdint.h>
-	//#define DEBUG_PRINT // костыль, почему не работает через makeFile?
+	#define DEBUG_PRINT // костыль, почему не работает через makeFile?
 
 	#ifdef DEBUG_PRINT
 		#define DP(code) code
