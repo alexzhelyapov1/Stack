@@ -1,22 +1,12 @@
-// struct Stack {
-// 	void *data_with_canary;
-// 	void *data;
-// 	size_t capacity;
-// 	size_t size;
-// 	size_t sizeof_one_canary;
-// 	size_t size_element;
-// 	size_t log_level;
-// }; 
-
 #include "Stack.h"
 #include <cstring>
-#define MODERN_STACK do{void *data = stack->data;	\
-					  void *data_with_canary = stack->data_with_canary; \
-					  size_t sizeof_one_canary = stack->sizeof_one_canary; \
-					  size_t capacity = stack->capacity; \
-					  size_t size = stack->size; \
-					  size_t size_element = stack->size_element; \
-					  }while(false)
+// #define MODERN_STACK do{void *data = stack->data;	\
+// 					  void *data_with_canary = stack->data_with_canary; \
+// 					  size_t sizeof_one_canary = stack->sizeof_one_canary; \
+// 					  size_t capacity = stack->capacity; \
+// 					  size_t size = stack->size; \
+// 					  size_t size_element = stack->size_element; \
+// 					  }while(false)
 
 enum Resize_constants {
 	UP = 0,
@@ -84,13 +74,9 @@ int StackResize (struct Stack *stack, int mode) {
 
 
 int StackPush (struct Stack *stack, void *element) {
-	size_t size = stack->size;
-	size_t capacity = stack->capacity;
-	void *data = stack->data;
-	size_t size_element = stack->size_element;
 
 	DP(printf ("It's StackPush\n");)
-	if (size == capacity) {
+	if (stack->size == stack->capacity) {
 		DP(printf ("It's size = capacity\n");)
 		int result_of_resize = StackResize (stack, UP);
 		if (result_of_resize != NULL) {
@@ -98,8 +84,8 @@ int StackPush (struct Stack *stack, void *element) {
 			return result_of_resize;
 		}
 	}
-	memcpy (data + size * size_element, element, stack->size_element);
-	DP(printf ("------------After push elenemt = %d\n", * ((int *) data + size * size_element));)
+	memcpy (stack->data + stack->size * stack->size_element, element, stack->size_element);
+	DP(printf ("------------After push elenemt = %d\n", * ((int *) stack->data + stack->size * stack->size_element));)
 	DP(printf ("------------EEEEE push elenemt = %d\n", * ((int *) element));)
 	stack->size++;
 	return OK;
@@ -107,16 +93,9 @@ int StackPush (struct Stack *stack, void *element) {
 
 
 int StackTop (struct Stack *stack, void *element) {
-	//MODERN_STACK
-	void *data = stack->data;	\
-	void *data_with_canary = stack->data_with_canary; \
-	size_t sizeof_one_canary = stack->sizeof_one_canary; \
-	size_t capacity = stack->capacity; \
-	size_t size = stack->size; \
-	size_t size_element = stack->size_element; \
 
-	DP(printf ("\n+++Test element out - %d\n", * ((int *) data + (size - 1) * size_element));)
-	memcpy (element, data + (size - 1) * size_element, size_element);
+	DP(printf ("\n+++Test element out - %d\n", * ((int *) stack->data + (stack->size - 1) * stack->size_element));)
+	memcpy (element, stack->data + (stack->size - 1) * stack->size_element, stack->size_element);
 	DP(printf ("It's After memcpy\n");)
 	int result_stack_pop = StackPop (stack);
 	if (result_stack_pop != NULL) {
