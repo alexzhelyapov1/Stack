@@ -8,13 +8,16 @@ int Fill_Ordered_Numbers (struct Stack *stack) {
 			printf ("Error = %d\n", result);
 		}
 	}
-	for (int i = 0; i < n; i++) {
-		int *x = (int *) calloc (1, sizeof (int));
+	int *x = (int *) calloc (1, sizeof (int));
+	for (int i = 0; i < n + 2; i++) {
 		int result = StackTop (stack, x);
 		if (result != OK) {
-			printf ("ErrorTop = %d\n", result);
+			printf ("\nErrorTop = %d", result);
 		}
-		printf ("%d ", *x);
+		else {
+			printf ("%d ", *x);
+		}
 	}
+	free (x);
 	return OK;
 }

@@ -3,12 +3,20 @@
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include <stdint.h>
-	#define DEBUG_PRINT // костыль, почему не работает через makeFile?
 
-	#ifdef DEBUG_PRINT
+	#define LOG_LEVEL_LOG_ERRORS
+	//#define DEBUG_PRINT // костыль, почему не работает через makeFile?
+
+	#ifdef LOG_LEVEL_LOG_ALL
 		#define DP(code) code
+		#define DPR(code) {fprintf(stack->flogger, "!!!ERROR!!!	"); code}
 	#else
-		#define DP(code)  
+		#define DP(code)
+		#ifdef LOG_LEVEL_LOG_ERRORS
+			#define DPR(code) {fprintf(stack->flogger, "!!!ERROR!!!	"); code}
+		#else
+			#define DPR(code) 
+		#endif
 	#endif
 
 /*!
@@ -29,20 +37,23 @@ security
 		size_t size_element;
 		size_t log_level;
 		uint64_t bad_constant = 0xDEDBAD;
+		FILE *flogger;
 	};
 
 
 	enum Log_levels {
-		RELEASE = 0,
-		LOG_ERRORS,
-		LOG_ALL
+		RELEASE = 0, 
+		LOG_ERRORS, //DPR
+		LOG_ALL //DP
 	};
 
 
 	enum Errors {
 		OK = 0,
 		ERROR_ALLOC_MEMORY_IN_STACK_CTOR,
-		ERROR_RESIZE_REALLOC
+		ERROR_RESIZE_REALLOC,
+		ERROR_OPEN_LOGGER_FILE,
+		ERROR_TOP_EMPTY_STACK
 	};
 
 
