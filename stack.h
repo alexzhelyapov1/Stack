@@ -4,7 +4,9 @@
 	#include <stdio.h>
 	#include <stdint.h>
 
-	#define LOG_LEVEL_LOG_ERRORS
+	#define LOG_LEVEL_LOG_ERRORS 
+	// #define CANARY_VALUE 17446131000709551615
+	// #define CANARY_VALUE 12345654321
 	//#define DEBUG_PRINT // костыль, почему не работает через makeFile?
 
 	#ifdef LOG_LEVEL_LOG_ALL
@@ -33,7 +35,8 @@ security
 		void *data;
 		size_t capacity;
 		size_t size;
-		size_t sizeof_one_canary;
+		uint64_t canary_value = 12321;
+		size_t sizeof_one_canary = sizeof (canary_value);
 		size_t size_element;
 		size_t log_level;
 		uint64_t bad_constant = 0xDEDBAD;
@@ -53,7 +56,12 @@ security
 		ERROR_ALLOC_MEMORY_IN_STACK_CTOR,
 		ERROR_RESIZE_REALLOC,
 		ERROR_OPEN_LOGGER_FILE,
-		ERROR_TOP_EMPTY_STACK
+		ERROR_TOP_EMPTY_STACK,
+	};
+
+	enum Validation_Errors {
+		ERROR_OVERSIZE = 0b00001,
+
 	};
 
 
